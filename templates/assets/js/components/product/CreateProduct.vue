@@ -1,5 +1,6 @@
 <template>
   <section>
+    <form action="">
     <div class="row">
       <div class="col-md-6">
         <div class="card shadow mb-4">
@@ -13,7 +14,7 @@
               <input type="text" v-model="product_sku" placeholder="Product Name" class="form-control">
             </div>
             <div class="form-group">
-              <label for="">Description</label>
+              <label for="">description</label>
               <textarea v-model="description" id="" cols="30" rows="4" class="form-control"></textarea>
             </div>
           </div>
@@ -93,6 +94,7 @@
 
     <button @click="saveProduct" type="submit" class="btn btn-lg btn-primary">Save</button>
     <button type="button" class="btn btn-secondary btn-lg">Cancel</button>
+    </form>
   </section>
 </template>
 
@@ -188,10 +190,11 @@ export default {
         product_variant: this.product_variant,
         product_variant_prices: this.product_variant_prices
       }
-
-
-      axios.post('/product', product).then(response => {
+    
+      
+      axios.post('http://127.0.0.1:8000/product/api/product/', product).then(response => {
         console.log(response.data);
+        
       }).catch(error => {
         console.log(error);
       })

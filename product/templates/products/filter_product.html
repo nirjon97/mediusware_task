@@ -13,12 +13,51 @@
         <form action="" method="get" class="card-header">
             <div class="form-row justify-content-between">
                 <div class="col-md-2">
-                    <input type="text" name="title" placeholder="Product Title" class="form-control">
+                    <input type="text" name="icontains" placeholder="Product Title" class="form-control">
                 </div>
                 <div class="col-md-2">
                     <select name="variant_filter" id="" class="form-control">
                         <option selected disabled>--Select A Variant--</option>
 
+                        {% for q in temp_varient %}
+                        <optgroup label={{q.title}}>
+                            <!--for colour-->
+                        {% for p in filter_product_vari|dictsort:'variant_title' %}
+                            {% if q.title == "Size" %}
+                              {% if p.variant.title == "Size" %}
+                               {% ifchanged %}{{p.variant_title}}{% endifchanged %} 
+                            
+                            <option>{{p.variant_title}}</option>
+                            {% endif %}
+                            {% endif %}
+                            {% endfor %}
+                          <!--for size-->
+                        {% for p in product_vari|dictsort:'variant_title' %}
+                        {% if q.title == "Color" %}
+                          {% if p.variant.title == "Color" %}
+                          {% ifchanged %}{{p.variant_title}}{% endifchanged %}
+                        <option>{{p.variant_title}}</option>
+                        {% endif %}
+                        {% endif %}
+                        {% endfor %}
+
+                         <!--for Quality-->
+                         {% for p in product_vari|dictsort:'variant_title' %}
+                         {% if q.title == "Style" %}
+                           {% if p.variant.title == "Style" %}
+                           {% ifchanged %}{{p.variant_title}}{% endifchanged %}
+                         <option>{{p.variant_title}}</option>
+                         {% endif %}
+                         {% endif %}
+                         {% endfor %}
+
+
+
+                        </optgroup>
+
+
+                        {% endfor %}
+                        
                     </select>
                 </div>
 
@@ -59,40 +98,31 @@
                     <tbody>
                         
                         <tr>
-                            {% for p in pro %}
+                            {% for p in filter_product_list%}
                             <td>{{p.id}}</td>
-                            <td> {{ p.product.title}}<br> </td>
+                            <td> {{ p.product.title }}<br> </td>
                             <td>{{ p.product.description }}</td>
                             <td>
-                                {% for q in p.varient_with_price.all %}
-                                <dl class="row mb-0" style="height: 30px; width:500px; overflow: hidden" id="variant">
-                                    
+                                <dl class="row mb-0" style="height: 80px; width:450px; overflow: hidden" id="variant">
+        
                                     <dt class="col-sm-3 pb-0">
-                                        
-                                        {{q.product_variant_one.variant_title}}/
-                                        {{q.product_variant_two.variant_title}}/
-                                        {{q.product_variant_three.variant_title}}/
-                                        
-                                      
+
+                                        {{p.product_variant_one.variant_title}}/{{p.product_variant_two.variant_title}}/{{p.product_variant_three.variant_title}}
+   
                                     </dt>
-                                    
+        
                                 </dl>
-                                {% endfor %}
                                 <button onclick="$('#variant').toggleClass('h-auto')" class="btn btn-sm btn-link">Show more
                                 </button>
                             </td>
                             <td>
                                 <div class="btn-group btn-group-sm">
-                                {% for q in p.varient_with_price.all %}
-                                    {{ q.price }}<br>
-                                 {% endfor %}
+                                    {{ p.price }}
                                 </div>
                             </td>
                             <td>
                                 <div class="btn-group btn-group-sm">
-                                {% for q in p.varient_with_price.all %}
-                                    {{ q.stock }}<br>
-                                 {% endfor %}
+                                    {{ p.stock }}
                                     
                                 </div>
                             </td>
@@ -110,50 +140,5 @@
 
         </div>
 
-
-        <div class="card-footer">
-            <div class="row justify-content-between">
-                <div class="col-md-6">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination">
-
-                   {% if page_obj.has_previous %}
-                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
-                   {% else %}
-                   <li class="page-item"><a class="page-link">Previous</a></li>
-                   {% endif %}
-                   
-                   {% for i in page_obj.paginator.page_range %}
-                     {% if page_obj.number == i %}
-                     <li class="page-item"><a class="page-link" href="#">{{ i }} </a></li>
-                     {% else %}
-                     <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-                     {% endif %}
-                   {% endfor %}
-                   
-                   {% if page_obj.has_next %}
-                   <li class="page-item"> <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
-                   {% else %}
-                   <li class="page-item"><a class="page-link">Next</a></li>
-                   {% endif %}
-                    </ul>
-                </nav>
-                </div>
-                <!--data summery -->
-                <div class="col-md-3">
-
-                    <div>
-                        <span>
-                          
-                          <span>
-                            Showing Page {{ page_obj.number }} to {{page_obj.paginator.num_pages}} out of {{ page_obj.paginator.num_pages }}
-                          </span>
-                          
-                        </span>
-                      </div>
-    
-                </div>
-            </div>
-        </div>
     </div>
 {% endblock %}
